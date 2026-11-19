@@ -1,0 +1,25 @@
+{
+  "name": "night-revels-theatre",
+  "version": "1.0.0",
+  "private": true,
+  "description": "韩熙载夜宴图立体折屏画卷与空间听觉实验",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build && node scripts/standalone.mjs",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node scripts/browser-check.mjs"
+  },
+  "dependencies": {
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "playwright": "1.65.1",
+    "vite": "8.3.8"
+  }
+}

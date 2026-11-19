@@ -1,0 +1,564 @@
+{
+  "scroll": "art/scroll.webp",
+  "sections": [
+    {
+      "id": 0,
+      "name": "听乐",
+      "thumbnail": "art/scene-1.webp",
+      "sourceRange": [
+        3505,
+        4553
+      ],
+      "layers": [
+        {
+          "id": "banquet-bed",
+          "description": "郎粲着红，韩熙载戴高帽，二人坐在围榻上听琵琶。围榻界定这一段的观看方向。画中相叠的主人、坐榻与前方侍者在此保留为一片。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/banquet-bed.webp",
+          "name": "韩熙载与郎粲坐榻",
+          "kind": "人物与床榻",
+          "x": 1.18,
+          "z": -0.66,
+          "height": 1.86,
+          "aspect": 1.107407,
+          "sourceBox": [
+            504.33,
+            14.0,
+            915.33,
+            385.0
+          ]
+        },
+        {
+          "id": "standing-guests",
+          "description": "屏前宾客的目光朝向琵琶。部分袍脚在原画中被前排遮住，本层借同卷宾客的袍脚补出被遮挡处。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": true,
+          "file": "art/standing-guests.webp",
+          "name": "屏前宾客",
+          "kind": "人物",
+          "x": -0.64,
+          "z": -0.29,
+          "height": 1.42,
+          "aspect": 1.084866,
+          "sourceBox": [
+            253.0,
+            14.33,
+            508.67,
+            250.0
+          ]
+        },
+        {
+          "id": "banquet-listeners",
+          "description": "坐客身体微倾，附近侍者也面向弹者。不同衣色把视线汇入同一场听乐。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/banquet-listeners.webp",
+          "name": "听乐宾客与侍者",
+          "kind": "人物",
+          "x": -0.69,
+          "z": 0.04,
+          "height": 1.36,
+          "aspect": 0.709799,
+          "sourceBox": [
+            199.0,
+            64.0,
+            387.33,
+            329.33
+          ]
+        },
+        {
+          "id": "pipa-player",
+          "description": "依故宫著录，弹琵琶者为李家明之妹。放大可观察琵琶面板、弦颈和双手的位置。声音为合成拨弦。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/pipa-player.webp",
+          "name": "琵琶乐伎",
+          "kind": "人物与乐器",
+          "x": -1.8,
+          "z": 0.36,
+          "height": 1.28,
+          "aspect": 0.758347,
+          "sourceBox": [
+            40.33,
+            145.67,
+            199.33,
+            355.33
+          ]
+        },
+        {
+          "id": "low-tables",
+          "description": "狭长案面陈列杯、盏和食器。斜列的桌缘与多条案腿为前后距离提供画面线索。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/low-tables.webp",
+          "name": "几案与酒器",
+          "kind": "器物",
+          "x": -0.27,
+          "z": 0.58,
+          "height": 0.72,
+          "aspect": 1.034161,
+          "sourceBox": [
+            274.33,
+            219.67,
+            385.33,
+            327.0
+          ]
+        },
+        {
+          "id": "foreground-guest",
+          "description": "前排宾客背向观者，回身听曲，椅背遮住了他的部分身体。这一层靠近观察路径。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/foreground-guest.webp",
+          "name": "背身听客与靠椅",
+          "kind": "人物与坐具",
+          "x": 0.27,
+          "z": 0.81,
+          "height": 1.22,
+          "aspect": 0.614458,
+          "sourceBox": [
+            405.67,
+            165.67,
+            541.67,
+            387.0
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "观舞",
+      "thumbnail": "art/scene-2.webp",
+      "sourceRange": [
+        2782,
+        3510
+      ],
+      "layers": [
+        {
+          "id": "monk",
+          "description": "故宫著录将僧人识为德明。僧人与观舞人群的姿态形成呼应。分层后露出的部分衣料以邻近衣褶补绘。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": true,
+          "file": "art/monk.webp",
+          "name": "德明和尚",
+          "kind": "人物",
+          "x": 0.02,
+          "z": -0.76,
+          "height": 1.66,
+          "aspect": 0.43544,
+          "sourceBox": [
+            290.33,
+            25.67,
+            396.0,
+            268.33
+          ]
+        },
+        {
+          "id": "dance-attendant",
+          "description": "左侧侍者站立，抬手向舞者一侧。衣带的细线保留在原画裁片中。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/dance-attendant.webp",
+          "name": "驻足女侍",
+          "kind": "人物",
+          "x": -1.65,
+          "z": -0.4,
+          "height": 1.22,
+          "aspect": 0.335505,
+          "sourceBox": [
+            51.67,
+            98.33,
+            120.33,
+            303.0
+          ]
+        },
+        {
+          "id": "clapper",
+          "description": "宾客双手持拍，面向正在舞动的人物。拍板的节奏是本段声场设计的参考。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/clapper.webp",
+          "name": "执拍宾客",
+          "kind": "人物与乐器",
+          "x": -0.2,
+          "z": -0.1,
+          "height": 1.55,
+          "aspect": 0.371053,
+          "sourceBox": [
+            264.67,
+            60.0,
+            358.67,
+            313.33
+          ]
+        },
+        {
+          "id": "drum-players",
+          "description": "韩熙载亲自擂鼓助兴。人物衣袍的左下缘沿画中大鼓截取，绕行时可见原有遮挡留下的边缘。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/drum-players.webp",
+          "name": "韩熙载击鼓",
+          "kind": "人物与乐器",
+          "x": 1.13,
+          "z": 0.12,
+          "height": 1.67,
+          "aspect": 0.389485,
+          "sourceBox": [
+            502.0,
+            25.67,
+            623.0,
+            336.33
+          ]
+        },
+        {
+          "id": "dancer",
+          "description": "故宫著录将舞者识为王屋山，所舞为六幺舞。这里保留画卷定格的转身姿势。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/dancer.webp",
+          "name": "舞者王屋山",
+          "kind": "人物",
+          "x": -0.97,
+          "z": 0.49,
+          "height": 1.24,
+          "aspect": 0.461121,
+          "sourceBox": [
+            181.33,
+            155.0,
+            266.33,
+            339.33
+          ]
+        },
+        {
+          "id": "red-drum",
+          "description": "红色大鼓旁的宾客背身而坐。鼓身和座椅相互遮挡，合并提取以保留画中的墨线。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/red-drum.webp",
+          "name": "鼓座与坐客",
+          "kind": "人物与器物",
+          "x": 0.68,
+          "z": 0.7,
+          "height": 1.28,
+          "aspect": 1.125731,
+          "sourceBox": [
+            328.33,
+            147.33,
+            585.0,
+            375.33
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "暂歇",
+      "thumbnail": "art/scene-3.webp",
+      "sourceRange": [
+        2086,
+        2784
+      ],
+      "layers": [
+        {
+          "id": "canopy",
+          "description": "帷幔、褥面与床梁围出休息的小空间。纺织物上的细纹来自本幅，分层后可看见侍女原先遮挡的边界。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/canopy.webp",
+          "name": "床帐与帷幔",
+          "kind": "陈设",
+          "x": 1.02,
+          "z": -0.86,
+          "height": 1.75,
+          "aspect": 0.938025,
+          "sourceBox": [
+            288.0,
+            0.0,
+            585.67,
+            317.33
+          ]
+        },
+        {
+          "id": "rest-bed",
+          "description": "韩熙载在床边净手，侍人环坐。奉盆者另设前景层；两层原先重叠的漆面用邻近纹理补色。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": true,
+          "file": "art/rest-bed.webp",
+          "name": "净手的韩熙载与侍人",
+          "kind": "人物与床榻",
+          "x": -0.77,
+          "z": -0.31,
+          "height": 1.73,
+          "aspect": 1.048731,
+          "sourceBox": [
+            18.67,
+            46.67,
+            363.0,
+            375.0
+          ]
+        },
+        {
+          "id": "washing-aide",
+          "description": "侍者捧盆立在床榻前，盆缘与主人的手部在画中相接。靠近可以观察两处轮廓怎样交叠。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/washing-aide.webp",
+          "name": "奉盆侍者",
+          "kind": "人物与器物",
+          "x": -0.74,
+          "z": 0.43,
+          "height": 1.23,
+          "aspect": 0.511667,
+          "sourceBox": [
+            132.67,
+            176.33,
+            235.0,
+            376.33
+          ]
+        },
+        {
+          "id": "fan-aide",
+          "description": "侍女手中高举圆扇，扇面接近帷帐边缘。沿走廊换位时，扇面会先于帐内陈设产生视差。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/fan-aide.webp",
+          "name": "持扇女侍",
+          "kind": "人物与器物",
+          "x": 1.05,
+          "z": 0.14,
+          "height": 1.42,
+          "aspect": 0.36809,
+          "sourceBox": [
+            505.67,
+            75.33,
+            603.33,
+            340.67
+          ]
+        },
+        {
+          "id": "serving-tray",
+          "description": "侍女侧身捧盘，托盘在身体之外横向伸出。盘沿、发髻与袍服保留为同一轮廓。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/serving-tray.webp",
+          "name": "捧盘女侍",
+          "kind": "人物与器物",
+          "x": 1.62,
+          "z": 0.68,
+          "height": 1.12,
+          "aspect": 0.492035,
+          "sourceBox": [
+            587.67,
+            168.0,
+            680.33,
+            356.33
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "清吹",
+      "thumbnail": "art/scene-4.webp",
+      "sourceRange": [
+        870,
+        1955
+      ],
+      "layers": [
+        {
+          "id": "flute-listeners",
+          "description": "长袍宾客的目光指向演奏区域，衣袖与深色漆木形成色调呼应。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/flute-listeners.webp",
+          "name": "屏前听客",
+          "kind": "人物",
+          "x": -1.62,
+          "z": -0.67,
+          "height": 1.47,
+          "aspect": 0.363636,
+          "sourceBox": [
+            1.33,
+            80.0,
+            98.67,
+            347.67
+          ]
+        },
+        {
+          "id": "red-musician",
+          "description": "坐客手持长条形乐具，面对乐伎。乐具的历史音高无法从这幅图像单独确定。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/red-musician.webp",
+          "name": "执拍坐客",
+          "kind": "人物与乐器",
+          "x": -1.12,
+          "z": -0.29,
+          "height": 1.33,
+          "aspect": 0.45925,
+          "sourceBox": [
+            155.0,
+            97.0,
+            273.33,
+            354.67
+          ]
+        },
+        {
+          "id": "first-flute",
+          "description": "合奏队列边缘的乐伎双手举管。这里将她分在前后有别的一层，用以观察队列的重叠关系。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/first-flute.webp",
+          "name": "清吹乐伎",
+          "kind": "人物与乐器",
+          "x": -0.59,
+          "z": 0.0,
+          "height": 1.13,
+          "aspect": 0.644094,
+          "sourceBox": [
+            282.0,
+            49.33,
+            418.33,
+            261.0
+          ]
+        },
+        {
+          "id": "ensemble",
+          "description": "四位相邻乐伎保留为一组，与旁侧另一个裁片组成画中的五人合奏。管乐的音高与时值为实验参数。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/ensemble.webp",
+          "name": "合奏乐伎",
+          "kind": "人物与乐器",
+          "x": 0.0,
+          "z": 0.35,
+          "height": 1.12,
+          "aspect": 1.254571,
+          "sourceBox": [
+            385.67,
+            62.67,
+            683.0,
+            299.67
+          ]
+        },
+        {
+          "id": "seated-host",
+          "description": "韩熙载解衣盘坐，手执方扇。椅子与脚踏的墨线仍可在图层下沿辨出。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/seated-host.webp",
+          "name": "持扇的韩熙载",
+          "kind": "人物与坐具",
+          "x": 1.43,
+          "z": -0.44,
+          "height": 1.6,
+          "aspect": 0.609081,
+          "sourceBox": [
+            823.67,
+            44.0,
+            1007.0,
+            345.0
+          ]
+        },
+        {
+          "id": "flute-attendant",
+          "description": "侍者立在持扇主人与合奏队列之间。观察者从她身边移过时，可比较两边人物视差。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/flute-attendant.webp",
+          "name": "侧立女侍",
+          "kind": "人物",
+          "x": 0.9,
+          "z": 0.79,
+          "height": 1.39,
+          "aspect": 0.305838,
+          "sourceBox": [
+            747.67,
+            113.67,
+            828.0,
+            376.33
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "散宴",
+      "thumbnail": "art/scene-5.webp",
+      "sourceRange": [
+        12,
+        870
+      ],
+      "layers": [
+        {
+          "id": "farewell-host",
+          "description": "高帽主人手持鼓槌，处于宴散人群之间。图中人物再次出现，使离席成为新的叙事时刻。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/farewell-host.webp",
+          "name": "持槌的韩熙载",
+          "kind": "人物",
+          "x": -0.5,
+          "z": -0.63,
+          "height": 1.8,
+          "aspect": 0.318471,
+          "sourceBox": [
+            298.67,
+            31.67,
+            398.67,
+            345.67
+          ]
+        },
+        {
+          "id": "farewell-pair",
+          "description": "一位宾客与女伎靠得很近，前后衣袖在原画中交叠。两人保留成组以呈现离席时的交谈。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/farewell-pair.webp",
+          "name": "送别宾客与女伎",
+          "kind": "人物",
+          "x": -1.4,
+          "z": 0.47,
+          "height": 1.45,
+          "aspect": 0.611336,
+          "sourceBox": [
+            51.33,
+            118.33,
+            202.33,
+            365.33
+          ]
+        },
+        {
+          "id": "far-aides",
+          "description": "侍者面向座上宾客。原作中被靠椅和坐客挡住的部分在换位观察时呈现为裁片边缘。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/far-aides.webp",
+          "name": "相对交谈的女侍",
+          "kind": "人物",
+          "x": 0.73,
+          "z": -0.31,
+          "height": 1.32,
+          "aspect": 0.427754,
+          "sourceBox": [
+            451.0,
+            91.33,
+            550.67,
+            324.33
+          ]
+        },
+        {
+          "id": "right-aide",
+          "description": "侧立侍者的袖口与座上人物相接。原画未提供被坐客遮住的完整下摆。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/right-aide.webp",
+          "name": "榻后侍者",
+          "kind": "人物",
+          "x": 1.42,
+          "z": -0.06,
+          "height": 1.47,
+          "aspect": 0.404696,
+          "sourceBox": [
+            593.67,
+            77.0,
+            691.33,
+            318.33
+          ]
+        },
+        {
+          "id": "farewell-seat",
+          "description": "宾客坐在长椅上，头转向身后交谈的人。靠椅的侧边和衣摆保留画中错落的透视关系。 景深、尺度与摆位由本实验推定。",
+          "occludedPaint": false,
+          "file": "art/farewell-seat.webp",
+          "name": "长椅上的宾客",
+          "kind": "人物与坐具",
+          "x": 1.06,
+          "z": 0.79,
+          "height": 1.35,
+          "aspect": 0.661333,
+          "sourceBox": [
+            510.67,
+            104.33,
+            676.0,
+            354.33
+          ]
+        }
+      ]
+    }
+  ]
+}
