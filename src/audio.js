@@ -1,4 +1,6 @@
-import { gates, gap, stations } from "./route.js";
+import { gap, stations } from "./route.js";
+
+import { drumHit, drumStep } from "./rhythm.js";
 
 export const trials = [
   {
@@ -22,17 +24,9 @@ export const trials = [
 ];
 const loop = 12;
 // 两种版本读取同一条循环音轨，只改变指定空间边界的增益。
-export function gains(s, versions) {
+export function gains(s, versions, dancerVisible = false) {
   const drum =
-    s < 1.8
-      ? 0
-      : s < gates[0]
-        ? versions[0] === "甲"
-          ? 0.73
-          : 0
-        : s < 9.4
-          ? 0.73
-          : 0;
+    s >= 1.8 && s < 9.4 && (versions[0] === "甲" || dancerVisible) ? 0.73 : 0;
   const wind =
     s < 15.5
       ? 0
@@ -49,10 +43,10 @@ function track(ctx, kind) {
     buf = ctx.createBuffer(1, rate * loop, rate),
     out = buf.getChannelData(0);
   const notes = [220, 247, 294, 330, 392, 330, 294, 247, 220, 294, 247, 196];
-  const step = [0.5, 0.375, 1.5][kind],
+  const step = [0.5, drumStep, 1.5][kind],
     span = [1, 0.48, 1.39][kind];
   for (let j = 0; j < loop / step; j++) {
-    if (kind === 1 && j % 8 === 5) continue;
+    if (kind === 1 && !drumHit(j)) continue;
     const hz =
       notes[(j * (kind === 0 ? 5 : 1)) % notes.length] * (kind === 2 ? 1.5 : 1);
     const start = Math.round(j * step * rate);
@@ -94,6 +88,12 @@ export class SoundField {
     this.nodes = [];
     this.epoch = 0;
   }
+  placeSources(sprites) {
+    this.positions = ["pipa-player", "red-drum", "ensemble"].map((id) => {
+      const mesh = sprites.find((sprite) => sprite.userData.id === id);
+      return mesh?.position.toArray();
+    });
+  }
   async enable() {
     if (!this.ctx) {
       const Context = window.AudioContext || window.webkitAudioContext;
@@ -111,7 +111,9 @@ export class SoundField {
         pan.refDistance = 2;
         pan.maxDistance = 34;
         pan.rolloffFactor = 0.82;
-        pan.setPosition(-stations[section], 1.15, 0);
+        pan.setPosition(
+          ...(this.positions?.[kind] ?? [-stations[section], 1.15, 0]),
+        );
         const gain = this.ctx.createGain();
         gain.gain.value = 0;
         gain.connect(pan);
@@ -132,19 +134,39 @@ export class SoundField {
   restart() {
     if (!this.ctx) return;
     this.epoch = this.ctx.currentTime + 0.035;
+    this.drumEpoch = this.epoch;
+    this.wasVisible = false;
     for (const n of this.nodes) {
-      if (n.source) {
-        n.source.stop();
-        n.source.disconnect();
-      }
-      n.source = this.ctx.createBufferSource();
-      n.source.buffer = n.buffer;
-      n.source.loop = true;
-      n.source.connect(n.gain);
-      n.source.start(this.epoch);
+      const now = this.ctx.currentTime;
+      n.gain.gain.cancelScheduledValues(now);
+      n.gain.gain.setValueAtTime(0, now);
+      n.level = undefined;
+      this.startTrack(n, this.epoch);
     }
   }
-  update(s, camera) {
+  startTrack(node, when) {
+    if (node.source) {
+      node.source.stop();
+      node.source.disconnect();
+    }
+    node.source = this.ctx.createBufferSource();
+    node.source.buffer = node.buffer;
+    node.source.loop = true;
+    node.source.connect(node.gain);
+    node.source.start(when);
+  }
+  syncDrum(visible) {
+    if (!this.ctx) return;
+    if (visible && !this.wasVisible) {
+      this.drumEpoch = this.ctx.currentTime;
+      this.startTrack(this.nodes[1], this.drumEpoch);
+    }
+    this.wasVisible = visible;
+  }
+  drumPhase() {
+    return this.ctx ? Math.max(0, this.ctx.currentTime - this.drumEpoch) : 0;
+  }
+  update(s, camera, visible) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime,
       l = this.ctx.listener,
@@ -167,7 +189,7 @@ export class SoundField {
       l.setPosition(p.x, p.y, p.z);
       l.setOrientation(f.x, f.y, f.z, 0, 1, 0);
     }
-    const levels = gains(s, this.versions);
+    const levels = gains(s, this.versions, visible);
     this.nodes.forEach((n, i) => {
       if (n.level === levels[i]) return;
       n.level = levels[i];

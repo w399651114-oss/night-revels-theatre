@@ -1,6 +1,21 @@
 import * as T from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { stations, assetURL } from "./route.js";
+import { animateGesture, attachGesture } from "./figure-motion.js";
+
+async function pictureMaterial(loader, path) {
+  const texture = await loader.loadAsync(assetURL(path)).catch(() => {
+    throw new Error("无法读取图层 " + path);
+  });
+  texture.colorSpace = T.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return new T.MeshBasicMaterial({
+    map: texture,
+    alphaTest: 0.47,
+    side: T.DoubleSide,
+    color: 0xfff4df,
+  });
+}
 
 // 合批前把木框、画芯与金属收边放在同一局部坐标下。
 export class StageDetails {
@@ -188,22 +203,16 @@ export class StageDetails {
     const layers = manifest.sections.flatMap((section, i) =>
       section.layers.map((layer) => ({ layer, i })),
     );
+    this.figureGestures = [];
     let done = 0;
     await Promise.all(
       layers.map(async ({ layer, i }) => {
-        const tex = await loader.loadAsync(assetURL(layer.file)).catch(() => {
-          throw new Error("无法读取图层 " + layer.file);
-        });
-        tex.colorSpace = T.SRGBColorSpace;
-        tex.anisotropy = 4;
+        const [mat, gestureMaterial] = await Promise.all([
+          pictureMaterial(loader, layer.file),
+          layer.motion ? pictureMaterial(loader, layer.motion.file) : null,
+        ]);
         const w = layer.height * layer.aspect,
           h = layer.height;
-        const mat = new T.MeshBasicMaterial({
-          map: tex,
-          alphaTest: 0.47,
-          side: T.DoubleSide,
-          color: 0xfff4df,
-        });
         const m = new T.Mesh(new T.PlaneGeometry(w, h), mat);
         // 同层原有遮挡顺序用毫米级微差保留，防止共面闪烁。
         const depths = [-0.72, -0.34, 0, 0.36, 0.77];
@@ -217,6 +226,11 @@ export class StageDetails {
         );
         m.castShadow = true;
         m.userData.id = layer.id;
+        if (gestureMaterial) {
+          const part = attachGesture(m, layer, gestureMaterial);
+          this.figureGestures.push(part);
+          this.wireObjects.push(part.gesture);
+        }
         this.scene.add(m);
         this.sprites.push(m);
         this.wireObjects.push(m);
@@ -243,6 +257,10 @@ export class StageDetails {
     this.scene.add(new T.Mesh(geom, this.shadowMat));
     this.staticShadows.forEach((g) => g.dispose());
     this.staticShadows = [];
+  }
+  animateFigures(phase, drumPhase = phase) {
+    for (const part of this.figureGestures || [])
+      animateGesture(part, phase, drumPhase);
   }
   project(label) {
     const point = label.point.clone().project(this.camera);

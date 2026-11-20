@@ -71,7 +71,24 @@ try {
   await page.waitForSelector(".spot:visible");
   assert.equal(await page.locator("#chapters button").count(), 5);
   await shot("听乐剧场");
-  await page.locator(".spot:visible").first().click();
+  await page
+    .locator(".spot:visible")
+    .filter({ hasText: "琵琶" })
+    .first()
+    .click();
+  await click("scroll");
+  await page.locator('.scroll-reader[data-mode="object"]').waitFor();
+  await page.locator("[data-scroll-section='2']").click();
+  await page.locator("[data-scroll-object]").selectOption({ index: 1 });
+  await page.locator("[data-scroll-gap]").click();
+  await page.locator('.scroll-reader[data-mode="gap"]').waitFor();
+  await shot("原卷对照");
+  await click("close");
+  await page
+    .locator(".spot:visible")
+    .filter({ hasText: "琵琶" })
+    .first()
+    .click();
   await click("approach");
   await click("help");
   await click("reset");
@@ -100,7 +117,7 @@ try {
     { timeout: 90000 },
   );
   await shot("留白实验");
-  await click("replay");
+  if (await page.locator("#trial-bar").isVisible()) await click("replay");
   await click("evidence");
   for (const id of ["L1", "L2", "L3"])
     assert.ok((await page.locator("#drawer").innerText()).includes(id));
@@ -111,6 +128,14 @@ try {
   assert.deepEqual(
     params.切片.map((t) => t.版本),
     ["乙", "乙"],
+  );
+  assert.ok(
+    params.试验记录.回合.some(
+      (run) =>
+        run.切片 === 2 &&
+        run.轨迹.length > 0 &&
+        run.事件.some((e) => e.事件 === "留白区"),
+    ),
   );
   await click("close");
   await click("labels");
@@ -207,7 +232,15 @@ try {
     assert.equal(await local.locator("#scene-title").innerText(), "听乐");
     assert.deepEqual(requests, []);
     await local.getByRole("button", { name: "证据溯源" }).click();
-    console.log("缺图提示、重试和离线双击入口通过");
+    await local.locator('[data-do="scroll"]').click();
+    assert.equal(
+      await local.locator(".scroll-paper").evaluate(async (img) => {
+        await img.decode();
+        return img.naturalWidth;
+      }),
+      3840,
+    );
+    console.log("缺图提示、重试、离线双击与离线全卷对照通过");
   }
 } finally {
   await browser.close();

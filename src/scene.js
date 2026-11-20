@@ -10,6 +10,7 @@ import {
   halo,
   horizon,
 } from "./textures.js";
+import { DancerCue } from "./dancer-cue.js";
 import { StageDetails } from "./details.js";
 
 export class Theatre extends StageDetails {
@@ -169,7 +170,13 @@ export class Theatre extends StageDetails {
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrixWorld();
   }
-  render(time, phase = 0) {
+  installCue() {
+    this.cue = new DancerCue(
+      this,
+      this.sprites.find((sprite) => sprite.userData.id === "dancer"),
+    );
+  }
+  render(time, phase = 0, sound) {
     const sx = Math.round(this.state.s / 2) * 2;
     if (sx !== this.shadowCenter) {
       this.shadowCenter = sx;
@@ -177,12 +184,10 @@ export class Theatre extends StageDetails {
       this.sun.target.position.set(-sx, 0, 0);
       this.renderer.shadowMap.needsUpdate = true;
     }
-    for (const sprite of this.sprites) {
-      if (sprite.userData.id === "dancer")
-        sprite.rotation.z = 0.015 * Math.sin((phase * Math.PI * 2) / 0.75);
-      if (sprite.userData.id === "pipa-player")
-        sprite.rotation.z = 0.003 * Math.sin(phase * Math.PI * 4);
-    }
+    const visible = this.cue?.prepare(this.state.s) ?? false;
+    sound?.syncDrum(visible);
+    this.animateFigures(phase, sound?.drumPhase() ?? phase);
+    if (this.cue) this.cue.probe.quaternion.copy(this.cue.actor.quaternion);
     this.cameraPose();
     const near = this.flames.reduce((a, b) =>
       Math.abs(a.position.x + this.state.s) <
@@ -205,10 +210,10 @@ export class Theatre extends StageDetails {
       o.material.wireframe = on;
     });
   }
-  setQuality(level) {
+  setQuality(level, resize = true) {
     this.level = level;
     this.renderer.shadowMap.enabled = level !== "节能";
     this.renderer.shadowMap.needsUpdate = true;
-    this.resize();
+    if (resize) this.resize();
   }
 }

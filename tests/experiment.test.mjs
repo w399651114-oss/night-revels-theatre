@@ -24,15 +24,15 @@ test("五段沿卷顺序、留白和屏端几何净空", () => {
     }
   }
 });
-test("两种听乐边界只改变鼓声；回退可再次触发", () => {
-  const before = gates[0] - 0.01;
-  assert.ok(gains(before, ["甲", "甲"])[1] > 0);
-  assert.equal(gains(before, ["乙", "甲"])[1], 0);
-  assert.deepEqual(
-    gains(gates[0], ["甲", "甲"]),
-    gains(gates[0], ["乙", "甲"]),
-  );
-  assert.equal(gains(before, ["甲", "甲"])[0], gains(before, ["乙", "乙"])[0]);
+test("乙在舞者共同揭帧时开鼓，与固定屏线解耦，转回遮挡时重新关闭", () => {
+  for (const s of [3.65, 3.71, 4.2, 4.6]) {
+    assert.equal(gains(s, ["乙", "甲"], false)[1], 0);
+    assert.equal(
+      gains(s, ["乙", "甲"], true)[1],
+      gains(s, ["甲", "甲"], true)[1],
+    );
+    assert.ok(gains(s, ["甲", "甲"], false)[1] > 0);
+  }
 });
 test("静默覆盖整个留白，延续版逐步衰减，固定实验段包含边界", () => {
   for (let s = gap[0]; s <= gap[1]; s += 0.1) {

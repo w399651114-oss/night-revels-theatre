@@ -1,6 +1,7 @@
 import { titles, assetURL } from "./route.js";
 import { trials } from "./audio.js";
 import { evidence } from "./evidence.js";
+import { scrollViewHTML } from "./scroll-view.js";
 import { icon } from "./icons.js";
 
 export const action = (id, label, ic = "") =>
@@ -11,8 +12,8 @@ export const action = (id, label, ic = "") =>
   label +
   "</button>";
 const diagrams = [
-  ["2.25 米 · 屏前", "4.20 米 · 绕屏", "6.15 米 · 见舞"],
-  ["闻鼓", "越过屏端", "见舞步"],
+  ["2.25 米 · 屏前", "绕屏见舞 · 乙起鼓", "6.15 米 · 终点"],
+  ["屏前先闻鼓", "绕屏见舞", "停驻重听"],
   ["前段鼓声渐远", "榻前停驻", "自主离开"],
   ["18.60 米 · 吹奏", "20.95 米 · 留白", "23.55 米 · 出廊"],
   ["散宴驻足", "折返留白", "重听清吹"],
@@ -63,7 +64,7 @@ export function panelContent(type, app) {
       '<div class="schematic" aria-label="时空边界示意"><div><span>' +
       ["屏前", "清吹"][slice] +
       "</span><span>" +
-      ["屏界", "留白"][slice] +
+      ["见舞", "留白"][slice] +
       "</span><span>" +
       ["屏后", "散宴"][slice] +
       '</span></div><div class="bars">' +
@@ -89,7 +90,7 @@ export function panelContent(type, app) {
       "</div><small>研究推定 · 增益趋势示意</small></div>" +
       "<p>" +
       (slice === 0
-        ? "甲在屏前放入可衰减的鼓声；乙越过屏线才放入相同鼓声。"
+        ? "甲在屏前放入可衰减的鼓声；乙在舞者露出的同一渲染帧启动鼓点。两版共享这次落槌。"
         : "甲让管声进入留白后逐步衰减；乙在留白入口把管声收为静默。") +
       "</p><dl>" +
       row("固定条件", "路线、音轨、视点、速度") +
@@ -99,7 +100,18 @@ export function panelContent(type, app) {
         "replay",
         app.replaying ? "停止对照行走" : "从同一起点试听",
         app.replaying ? "pause" : "play",
-      );
+      ) +
+      "<p>开始后收起面板，本标签页记录条件顺序、行进与驻足。可点“听到了”“看到了”或“声止了”自报知觉。</p>" +
+      (app.log.memoryOnly
+        ? "<p>浏览器暂存空间不可用，请在关闭页面前下载记录。</p>"
+        : "") +
+      (app.log.runs.length
+        ? action(
+            "export-log",
+            "下载实验记录 · " + app.log.runs.length + " 回合",
+            "download",
+          )
+        : "");
   } else if (type === "evidence") {
     title = "三层证据溯源";
     const img = manifest.sections[section].thumbnail;
@@ -129,7 +141,10 @@ export function panelContent(type, app) {
       '">' +
       e.source +
       ' ↗</a><div class="evidence-path">' +
-      diagrams[section]
+      (section === 1 && versions[0] === "乙"
+        ? ["屏前无鼓", "见舞起鼓", "停驻重听"]
+        : diagrams[section]
+      )
         .map((node) => "<span>" + node + "</span>")
         .join("<i></i>") +
       "</div><p>" +
@@ -144,7 +159,13 @@ export function panelContent(type, app) {
       '</p><a target="_blank" rel="noreferrer" href="https://www.dpm.org.cn/collection/paint/228200.html">故宫博物院藏品著录 ↗</a><details><summary>人物与器物索引</summary><div class="object-list">' +
       app.objects.map((l, i) => action("item-" + i, l.name)).join("") +
       "</div></details></article>" +
+      action("scroll", "展开原卷对照", "book") +
+      (section >= 3 ? action("scroll-gap", "定位留白取样", "aim") : "") +
       action("export", "下载当前证据与参数", "download");
+  } else if (type === "scroll") {
+    title = "原卷对照";
+    body =
+      scrollViewHTML(manifest) + action("evidence", "返回本段证据", "book");
   } else if (type === "settings") {
     title = "视图与导出";
     body =
@@ -169,7 +190,8 @@ export function panelContent(type, app) {
         recording ? "pause" : "rec",
       ) +
       "<p>录像收录剧场画面与合成声场，由浏览器下载。实际帧率取决于设备。</p>" +
-      action("export", "下载实验参数", "download");
+      action("export", "下载实验参数", "download") +
+      '<p><a target="_blank" rel="noreferrer" href="https://github.com/w399651114-oss/night-revels-theatre/blob/main/docs/4K分镜与验收.md">完整演示分镜与甲乙复听时码 ↗</a></p>';
   } else if (type === "object") {
     title = label.name;
     body =
@@ -181,6 +203,7 @@ export function panelContent(type, app) {
       label.description +
       "</p>" +
       action("approach", "走近看看", "aim") +
+      action("scroll", "在原卷中定位", "book") +
       action("evidence", "查看本段证据", "book");
   } else {
     title = "观卷操作";

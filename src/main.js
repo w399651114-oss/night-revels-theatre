@@ -1,6 +1,8 @@
 import "./style.css";
 import { Theatre } from "./scene.js";
-import { SoundField, trials } from "./audio.js";
+import { mountScrollView } from "./scroll-view.js";
+import { TrialLog } from "./trial-log.js";
+import { SoundField, trials, gains } from "./audio.js";
 import { Capture, download } from "./capture.js";
 import {
   titles,
@@ -23,13 +25,16 @@ const world = $("#world"),
   status = $("#loading"),
   annotations = $("#annotations");
 const sound = new SoundField();
+const log = new TrialLog();
 const app = {
+  log,
   section: 0,
   slice: 0,
   versions: sound.versions,
   quality: "标准",
   recording: false,
   replaying: false,
+  startingTrial: false,
 };
 let stage,
   capture,
@@ -150,7 +155,10 @@ function updateButtons() {
     $('[data-do="' + key + '"]').setAttribute("aria-pressed", String(val));
 }
 function refreshPanel() {
-  if (panel) drawer.innerHTML = panelContent(panel, app);
+  if (!panel) return;
+  drawer.innerHTML = panelContent(panel, app);
+  if (panel === "scroll")
+    mountScrollView(drawer, app.manifest, app.scrollOptions);
 }
 function open(type) {
   if (type !== panel) lastPanelFocus = document.activeElement;
@@ -165,7 +173,51 @@ function open(type) {
     lastPanelFocus.focus({ preventScroll: true });
   updateButtons();
 }
-function stop() {
+function trialBar() {
+  const bar = $("#trial-bar");
+  bar.hidden = !log.current;
+  if (!log.current) {
+    bar.replaceChildren();
+    return;
+  }
+  const v = app.versions[app.slice];
+  const mark = (id, text) =>
+    '<button data-do="' + id + '">' + text + "</button>";
+  bar.innerHTML =
+    "<strong>切片" +
+    ["一", "二"][app.slice] +
+    " · " +
+    v +
+    '</strong><div class="trial-conditions">' +
+    ["甲", "乙"]
+      .map(
+        (c) =>
+          '<button data-do="version-' +
+          c +
+          '" aria-pressed="' +
+          (c === v) +
+          '">' +
+          c +
+          "</button>",
+      )
+      .join("") +
+    "</div>" +
+    mark("hold-trial", app.replaying ? "驻足" : "继续") +
+    mark("replay", "结束") +
+    '<div class="trial-reports"><span>自报</span>' +
+    mark("heard", "听到了") +
+    mark(
+      app.slice === 0 ? "seen" : "quiet",
+      app.slice === 0 ? "看到了" : "声止了",
+    ) +
+    "</div>";
+}
+function stop(reason = "中途结束") {
+  if (log.current) {
+    log.end(reason, stage.state);
+    trialBar();
+  }
+
   tour = false;
   app.replaying = false;
   destination = null;
@@ -321,6 +373,7 @@ function caption(force = false) {
 async function audioToggle() {
   if (sound.on) sound.mute();
   else await sound.enable();
+  log.event(sound.on ? "开启声音" : "关闭声音", stage.state);
   updateButtons();
 }
 async function run(id) {
@@ -334,8 +387,7 @@ async function run(id) {
   if (id.startsWith("chapter-")) return chapter(Number(id.slice(8)));
   if (id.startsWith("quality-")) {
     app.quality = id.slice(8);
-    if (!app.recording) stage.setQuality(app.quality);
-    else stage.level = app.quality;
+    stage.setQuality(app.quality, !app.recording);
     refreshPanel();
     return;
   }
@@ -346,19 +398,43 @@ async function run(id) {
     return;
   }
   if (id.startsWith("version-")) {
-    app.versions[app.slice] = id.slice(8);
+    const condition = id.slice(8);
+    if (condition !== app.versions[app.slice])
+      log.event("切换条件", stage.state, {
+        从: app.versions[app.slice],
+        至: condition,
+      });
+    app.versions[app.slice] = condition;
     await sound.enable();
-    sound.update(stage.state.s, stage.camera);
+    sound.update(stage.state.s, stage.camera, stage.cue.visible);
+    trialBar();
     refreshPanel();
     updateButtons();
     return;
   }
   if (["experiment", "evidence", "help", "settings"].includes(id)) {
-    stop();
+    stop(
+      "打开" +
+        {
+          experiment: "实验面板",
+          evidence: "证据面板",
+          settings: "设置",
+          help: "帮助",
+        }[id],
+    );
     open(panel === id ? "" : id);
     return;
   }
   switch (id) {
+    case "scroll":
+    case "scroll-gap":
+      app.scrollOptions = {
+        section: app.section,
+        layerId: panel === "object" ? app.label?.sprite?.userData?.id : null,
+        showGap: id === "scroll-gap",
+      };
+      open("scroll");
+      break;
     case "close":
       open("");
       break;
@@ -400,24 +476,78 @@ async function run(id) {
       }
       updateButtons();
       break;
+    case "heard":
+    case "seen":
+    case "quiet": {
+      const text = { heard: "听到", seen: "看到", quiet: "听到声止" }[id];
+      log.event("自报：" + text, stage.state, {
+        条件: app.versions[app.slice],
+      });
+      message("已记下 · " + text);
+      break;
+    }
+    case "hold-trial":
+      if (!log.current) break;
+      app.replaying = !app.replaying;
+      app.runStartS = stage.state.s;
+      app.runStartPhase = sound.phase();
+      log.event(app.replaying ? "继续固定行走" : "手动驻足", stage.state);
+      trialBar();
+      break;
     case "replay":
-      if (app.replaying) stop();
-      else {
-        stop();
-        await sound.enable();
-        sound.restart();
-        stage.state.s = trials[app.slice].from;
-        Object.assign(stage.state, {
-          yaw: 0,
-          pitch: 0,
-          offsetZ: 0,
-          lift: 0,
-          fov: 44,
-        });
-        app.replaying = true;
+      if (log.current) {
+        stop("手动结束");
+        open("experiment");
+        break;
       }
-      refreshPanel();
+      if (app.startingTrial) break;
+      app.startingTrial = true;
+      stop();
+      try {
+        await sound.enable();
+      } finally {
+        app.startingTrial = false;
+      }
+      if (panel !== "experiment") break;
+      sound.restart();
+      stage.cue.reset();
+      const trial = trials[app.slice];
+      Object.assign(stage.state, {
+        s: trial.from,
+        yaw: 0,
+        pitch: 0,
+        offsetZ: 0,
+        lift: 0,
+        fov: 44,
+      });
+      app.runStartS = trial.from;
+      app.runStartPhase = 0;
+      app.replaying = true;
+      log.begin(
+        app.slice,
+        app.versions[app.slice],
+        trial,
+        [innerWidth, innerHeight, devicePixelRatio],
+        app.quality,
+      );
+      Object.assign(log.current, {
+        音频采样率: sound.ctx.sampleRate,
+        输出延时秒: sound.ctx.outputLatency ?? null,
+        声音开启: sound.on,
+        操作类型: "网页实时交互",
+      });
+      log.event("开始固定行走", stage.state);
+      open("");
+      trialBar();
       updateButtons();
+      break;
+    case "export-log":
+      download(
+        new Blob([JSON.stringify(log.export(), null, 2)], {
+          type: "application/json",
+        }),
+        "夜宴折屏-逐次实验记录.json",
+      );
       break;
     case "reset":
       chapter(app.section);
@@ -468,6 +598,7 @@ async function run(id) {
           速度米每秒: t.speed,
         })),
         证据: evidence[app.section],
+        试验记录: log.export(),
         说明: "米制与声学均为研究推定",
       };
       download(
@@ -487,6 +618,14 @@ document.addEventListener("click", (e) => {
 function input() {
   let pointers = new Map();
   function manual() {
+    if (log.current) {
+      if (app.replaying) {
+        app.replaying = false;
+        log.event("转为自主观察", stage.state);
+        trialBar();
+      }
+      return;
+    }
     if (tour || app.replaying || destination !== null || focusPoint) {
       stop();
       refreshPanel();
@@ -622,14 +761,28 @@ function frame(now) {
   }
   if (app.replaying) {
     const t = trials[app.slice];
-    v.s = Math.min(t.from + t.speed * sound.phase(), t.to);
-    if (v.s === t.to) {
-      stop();
-      refreshPanel();
-    }
+    v.s = Math.min(
+      app.runStartS + t.speed * Math.max(0, sound.phase() - app.runStartPhase),
+      t.to,
+    );
   }
-  stage.render(now / 1000, sound.on ? sound.phase() : 0);
-  sound.update(v.s, stage.camera);
+  stage.render(
+    log.current ? sound.phase() : now / 1000,
+    sound.on ? sound.phase() : 0,
+    sound,
+  );
+  sound.update(v.s, stage.camera, stage.cue.visible);
+  log.frame(
+    v,
+    app.versions[app.slice],
+    stage.cue.visible,
+    gains(v.s, app.versions, stage.cue.visible),
+    sound.on,
+  );
+  if (app.replaying && v.s === trials[app.slice].to) {
+    stop("抵达终点");
+    open("experiment");
+  }
   clock += dt;
   if (clock > 0.045 || prev !== v.s || lastUiPos !== v.s) {
     clock = 0;
@@ -680,6 +833,8 @@ async function init() {
         throw new Error("中文字体读取失败");
       }),
   ]);
+  stage.installCue();
+  sound.placeSources(stage.sprites);
   buildChapters();
   caption(true);
   capture = new Capture(stage, sound, message, (msg) => {
@@ -711,4 +866,7 @@ async function init() {
   $("#app").dataset.ready = "true";
   requestAnimationFrame(frame);
 }
+window.addEventListener("pagehide", () => {
+  if (log.current) stop("离开页面");
+});
 init().catch(errorView);

@@ -1,0 +1,167 @@
+.scroll-reader {
+  --scroll-ink: #392c24;
+  --scroll-red: #75392e;
+  --scroll-edge: #a59a86;
+  color: var(--scroll-ink);
+  min-width: 0;
+}
+.scroll-reader button,
+.scroll-index select {
+  color: var(--scroll-ink);
+  font: inherit;
+}
+.scroll-sections {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 0 0 0.7rem;
+  border: 1px solid var(--scroll-edge);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.scroll-sections button {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 0.15rem;
+  background: transparent;
+  border: 0;
+  font-size: 0.86rem;
+}
+.scroll-sections button + button {
+  border-right: 1px solid #bdb29d;
+}
+.scroll-sections [aria-pressed="true"],
+.scroll-gap-button[aria-pressed="true"] {
+  color: #fff5df;
+  background: #713e30;
+}
+.scroll-glass {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #85664f #deceb3;
+  overscroll-behavior-x: contain;
+  border: 1px solid #8b755f;
+  cursor: grab;
+  background: #ae8c66;
+  direction: ltr;
+  touch-action: pan-x pan-y;
+}
+.scroll-glass.grabbing {
+  cursor: grabbing;
+}
+.scroll-strip {
+  position: relative;
+  height: clamp(162px, 29vh, 270px);
+  aspect-ratio: 4553 / 396;
+  width: auto;
+  max-width: none;
+  user-select: none;
+}
+.scroll-reader .scroll-paper {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  object-fit: fill;
+}
+.scroll-mark {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 2px solid #fbdf95;
+  outline: 1px solid #73442b;
+  box-shadow: 0 0 0 9000px #20150930;
+}
+.scroll-mark span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: 10rem;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #fff8e6;
+  background: #553d2e;
+}
+.scroll-reader[data-mode="gap"] .scroll-mark span {
+  white-space: pre-line;
+}
+.scroll-reader[data-mode="gap"] .scroll-mark {
+  border-style: dashed;
+  background: #ffeba72e;
+}
+.scroll-overview {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  gap: 0.45rem;
+  align-items: center;
+}
+.scroll-overview button {
+  min-height: 38px;
+  padding: 0.25rem;
+  font-size: 0.78rem;
+  background: transparent;
+  border: none;
+}
+.scroll-overview input {
+  width: 100%;
+  min-height: 36px;
+  margin: 0;
+  accent-color: #83523d;
+}
+.scroll-index {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+  margin-top: 0.55rem;
+  font-size: 0.82rem;
+}
+.scroll-index select {
+  width: 100%;
+  min-width: 0;
+  padding: 0.55rem;
+  border: 1px solid var(--scroll-edge);
+  background: #eee2c9;
+  border-radius: 2px;
+  font-size: max(16px, 0.95rem);
+}
+.scroll-gap-button {
+  width: 100%;
+  min-height: 40px;
+  margin: 0.6rem 0 0.2rem;
+  border: 1px solid var(--scroll-edge);
+  border-radius: 2px;
+  background: transparent;
+  font-size: 0.84rem;
+}
+.scroll-reader p.scroll-reading {
+  margin: 0.55rem 0;
+  line-height: 1.65;
+  font-size: 0.88rem;
+}
+.scroll-reader p.scroll-source {
+  margin: 0.5rem 0 0;
+  color: #685647;
+  font-size: 0.76rem;
+}
+.scroll-reader :focus-visible {
+  outline: 2px solid #743a29;
+  outline-offset: -2px;
+}
+@media (max-width: 600px) {
+  .scroll-strip {
+    height: clamp(150px, 26svh, 230px);
+  }
+  .scroll-sections button,
+  .scroll-gap-button {
+    min-height: 44px;
+  }
+}

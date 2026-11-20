@@ -24,7 +24,7 @@ export class Capture {
     if (this.recorder) throw new Error("请先结束当前录制");
     this.format();
     try {
-      this.stage.render(performance.now() / 1000);
+      this.stage.render(performance.now() / 1000, this.sound.on ? this.sound.phase() : 0, this.sound);
       const image = await new Promise((resolve) =>
         this.stage.canvas.toBlob(resolve, "image/png"),
       );

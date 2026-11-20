@@ -4,6 +4,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 from PIL import Image, ImageFilter
+from movement import PARTS, separate_part
 from outlines import SECTIONS, REVISED, ISLANDS, PATCHES, BORROWED, NOTES
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -86,11 +87,20 @@ for section,(name,start,end,items) in enumerate(SECTIONS):
         figure,box=cut(stage,slug,outline)
         if slug in BORROWED:
             figure,box=extend_costume(figure,box,slug,stage)
+        motion=None
+        if slug in PARTS:
+            figure,motion=separate_part(figure,box,stage,slug,SCALE,OUTPUT)
+        # 鼓沿和活动槌头的接触点用同一对局部坐标定位，前景椅与鼓保留为同片。
+        if slug=="red-drum":
+            height,z=1.0,.14
         filename=f"{slug}.webp"
         figure.thumbnail((1250,1080),Image.Resampling.LANCZOS)
         figure.save(OUTPUT / filename,quality=89,method=5,alpha_quality=98)
         entry["layers"].append({"id":slug,"description":NOTES[slug]+" 景深、尺度与摆位由本实验推定。","occludedPaint":slug in PATCHES or slug in BORROWED,"file":f"art/{filename}","name":title,
           "kind":kind,"x":x,"z":z,"height":height,"aspect":round(figure.width/figure.height,6),
           "sourceBox":[round(c/SCALE,2) for c in box]})
+        if motion:
+            entry["layers"][-1]["motion"]=motion
+            entry["layers"][-1]["description"]+=" "+motion["name"]+"的支点、动作幅度与节拍为实验推定。"
     manifest["sections"].append(entry)
 (OUTPUT/"art.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")

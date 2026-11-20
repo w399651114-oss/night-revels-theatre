@@ -1085,3 +1085,87 @@ kbd {
   color: #d7c39b;
   margin: 4px 0;
 }
+
+#trial-bar {
+  position: relative;
+  z-index: 4;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: #30332a;
+  color: #f2e4c4;
+  border-bottom: 1px solid #6b634c;
+  font-size: 13px;
+}
+#trial-bar button {
+  height: 30px;
+  min-width: 35px;
+  padding: 0 9px;
+  border: 1px solid #6c6b56;
+  border-radius: 3px;
+}
+#trial-bar button[aria-pressed="true"] {
+  background: #685c43;
+  color: white;
+}
+.trial-conditions,
+.trial-reports {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.trial-reports {
+  margin-left: 12px;
+}
+.trial-reports span {
+  color: #d1bd92;
+}
+.clean #trial-bar {
+  display: none;
+}
+@media (max-width: 660px) {
+  #trial-bar {
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 4px 9px;
+  }
+  #trial-bar button {
+    font-size: 12px;
+    padding: 0 6px;
+    min-width: 27px;
+  }
+  .trial-reports {
+    gap: 3px;
+    margin-left: 0;
+  }
+  .trial-reports span {
+    display: none;
+  }
+}
+
+#drawer[data-type="scroll"] {
+  width: min(650px, calc(100% - 30px));
+}
+#drawer[data-type="scroll"] .panel-body {
+  background: #e8dec7;
+  color: #392c24;
+}
+#drawer[data-type="scroll"] .scroll-reading {
+  color: #44382b;
+}
+#drawer[data-type="scroll"] .scroll-source {
+  color: #665642;
+}
+#drawer[data-type="scroll"] .panel-btn {
+  color: #f2ead9;
+}
+@media (max-width: 660px) {
+  #drawer[data-type="scroll"] {
+    width: calc(100% - 14px);
+  }
+}
